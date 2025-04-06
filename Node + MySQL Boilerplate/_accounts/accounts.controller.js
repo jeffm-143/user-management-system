@@ -136,3 +136,53 @@ function validateResetToken(req, res, next) {
     .catch(next);
 }
 
+function resetPasswordSchema(req, res, next) {
+    const schema = Joi.object({
+        token: Joi.string().required(),
+        password: Joi.string().min(6).required(),
+        confirmPassword: Joi.string().valid(Joi.ref('password')).required()
+    });
+    validateRequest(req, next, schema);
+}
+
+function resetPassword(req, res, next) {
+    accountService.resetPassword(req.body)
+        .then(() => res.json({ message: 'Password reset successful, you can now login' }))
+        .catch(next);
+}
+
+function getAll(req, res, next) {
+    accountService.getAll()
+        .then(accounts => res.json(accounts))
+        .catch(next);
+}
+
+function getById(req, res, next) {
+    // users can get their own account and admins can get any account
+    if (Number(req.params.id) !== req.user.id && req.user.role !== Role.Admin) {
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
+
+    accountService.getById(req.params.id)
+        .then(account => account ? res.json(account) : res.sendStatus(404))
+        .catch(next);
+}
+
+function createSchema(req, res, next) {
+    const schema = Joi.object({
+        title: Joi.string().required(),
+        firstName: Joi.string().required(),
+        lastName: Joi.string().required(),
+        email: Joi.string().email().required(),
+        password: Joi.string().min(6).required(),
+        confirmPassword: Joi.string().valid(Joi.ref('password')).required(),
+        role: Joi.string().valid(Role.Admin, Role.User).required()
+    });
+    validateRequest(req, next, schema);
+}
+
+function create(req, res, next) {
+    accountService.create(req.body)
+        .then(account => res.json(account))
+        .catch(next);
+}
