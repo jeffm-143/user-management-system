@@ -1,6 +1,6 @@
 import { Role } from './role';
 
-export class account {
+export class Account {
     id: string;
     title: string;
     firstName: string;
