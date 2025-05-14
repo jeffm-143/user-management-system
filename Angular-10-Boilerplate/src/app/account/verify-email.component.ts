@@ -1,13 +1,14 @@
-import { Component, OnInit } from '@angular/core'; 
+import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { first } from 'rxjs/operators';
 
 import { AccountService, AlertService } from '@app/_services';
 
-enum EmailStatus{
+enum EmailStatus {
     Verifying,
     Failed
 }
+
 @Component({ templateUrl: 'verify-email.component.html' })
 export class VerifyEmailComponent implements OnInit {
     EmailStatus = EmailStatus;
@@ -21,13 +22,12 @@ export class VerifyEmailComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        // get verification token from url
         const token = this.route.snapshot.queryParams['token'];
 
+        // remove token from url to prevent http referer leakage
         this.router.navigate([], { relativeTo: this.route, replaceUrl: true });
 
-        // verify email
-        this.accountService.verifyEmail(token, )
+        this.accountService.verifyEmail(token)
             .pipe(first())
             .subscribe({
                 next: () => {
@@ -39,5 +39,4 @@ export class VerifyEmailComponent implements OnInit {
                 }
             });
     }
-
 }
