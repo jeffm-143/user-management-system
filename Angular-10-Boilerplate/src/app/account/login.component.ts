@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core'; 
+import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { UntypedFormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
 
-import { AccountService, AlertService } from '@app/_services'; 
+import { AccountService, AlertService } from '@app/_services';
 
 @Component({ templateUrl: 'login.component.html' })
 export class LoginComponent implements OnInit {
@@ -12,27 +12,30 @@ export class LoginComponent implements OnInit {
     submitted = false;
 
     constructor(
-        private formBuilder: FormBuilder,
+        private formBuilder: UntypedFormBuilder,
         private route: ActivatedRoute,
         private router: Router,
         private accountService: AccountService,
         private alertService: AlertService
-    ) {}
+    ) { }
 
     ngOnInit() {
         this.form = this.formBuilder.group({
-            email: ['', Validators.required, Validators.email],
+            email: ['', [Validators.required, Validators.email]],
             password: ['', Validators.required]
         });
     }
 
+    // convenience getter for easy access to form fields
     get f() { return this.form.controls; }
 
     onSubmit() {
         this.submitted = true;
 
+        // reset alerts on submit
         this.alertService.clear();
-        
+
+        // stop here if form is invalid
         if (this.form.invalid) {
             return;
         }
@@ -51,5 +54,5 @@ export class LoginComponent implements OnInit {
                     this.loading = false;
                 }
             });
-    }    
+    }
 }

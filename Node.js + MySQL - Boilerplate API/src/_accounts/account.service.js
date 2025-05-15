@@ -27,18 +27,18 @@ module.exports = {
 async function authenticate({ email, password, ipAddress }) {
     const account = await db.Account.scope('withHash').findOne({ where: { email } });
 
-    if (!account || !account.isVerified || !bcrypt.compareSync(password, account.passwordHash)) {
+    if (!account || !account.isVerified || !(await bcrypt.compare(password, account.passwordHash))) {
         throw 'Email or password is incorrect';
     }
 
-    // authentication successful so generate jwt and refresh tokens
+    // Authentication successful, so generate JWT and refresh tokens
     const jwtToken = generateJwtToken(account);
     const refreshToken = generateRefreshToken(account, ipAddress);
 
-    // save refresh token
+    // Save refresh token
     await refreshToken.save();
 
-    // return basic details and tokens
+    // Return basic details and tokens
     return {
         ...basicDetails(account),
         jwtToken,

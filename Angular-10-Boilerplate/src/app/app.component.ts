@@ -1,9 +1,9 @@
-import { component } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { AccountService } from './_services';
 import { Account, Role } from './_models';
 
-@component({ selector: 'app', templateUrl: 'app.component.html' })
+@Component({ selector: 'app', templateUrl: 'app.component.html' })
 export class AppComponent {
     Role = Role;
     account: Account;
