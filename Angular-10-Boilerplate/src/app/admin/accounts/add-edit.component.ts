@@ -30,7 +30,7 @@ export class AddEditComponent implements OnInit {
             lastName: ['', Validators.required],
             email: ['', [Validators.required, Validators.email]],
             role: ['', Validators.required],
-            status: ['Active', Validators.required],
+            status: ['active', Validators.required],
             password: ['', [Validators.minLength(6), this.isAddMode ? Validators.required: Validators.nullValidator]], 
             confirmPassword: ['']
         }, {

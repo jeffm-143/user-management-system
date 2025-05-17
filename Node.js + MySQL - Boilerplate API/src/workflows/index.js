@@ -35,12 +35,9 @@ async function getAll(req, res, next) {
         // Filter by requesterId in the details JSON
         if (req.query.requesterId) {
             console.log('Filtering by requesterId:', req.query.requesterId);
-            // This will need special handling for JSON field
-            // For MySQL JSON fields:
-            whereClause = Sequelize.literal(`details->"$.requesterId" = ${req.query.requesterId}`);
             
-            // If using Postgres, use this instead:
-            // whereClause = Sequelize.literal(`details->>'requesterId' = '${req.query.requesterId}'`);
+            whereClause = Sequelize.literal(`details->"$.requesterId" = ${req.query.requesterId}`);
+
         }
         
         console.log('Workflows query where clause:', JSON.stringify(whereClause));
@@ -111,11 +108,50 @@ async function updateStatus(req, res, next) {
             return res.status(404).json({ message: 'Workflow not found' });
         }
         
+        // Update workflow status
         workflow.status = req.body.status;
         await workflow.save();
         
+        // If the request should be updated and the workflow is for a request approval
+        if (req.body.updateRequest && workflow.type === 'Request Approval') {
+            console.log('Checking for associated request to update...');
+            
+            // Get the details which should contain the requestId
+            let details = workflow.details;
+            
+            // Parse JSON if needed
+            if (typeof details === 'string') {
+                try {
+                    details = JSON.parse(details);
+                } catch (err) {
+                    console.error('Error parsing workflow details:', err);
+                    details = {};
+                }
+            }
+            
+            // Check if the details contain a requestId
+            if (details && details.requestId) {
+                console.log(`Found requestId: ${details.requestId}, updating request status...`);
+                
+                // Find the request
+                const request = await db.Request.findByPk(details.requestId);
+                
+                if (request) {
+                    // Update request status based on workflow status
+                    request.status = req.body.status;
+                    await request.save();
+                    console.log(`Request ${details.requestId} status updated to ${req.body.status}`);
+                } else {
+                    console.log(`Request ${details.requestId} not found`);
+                }
+            } else {
+                console.log('No requestId found in workflow details');
+            }
+        }
+        
         res.json(workflow);
     } catch (err) {
+        console.error('Error updating workflow status:', err);
         next(err);
     }
 }

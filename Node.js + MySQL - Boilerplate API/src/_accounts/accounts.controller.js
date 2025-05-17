@@ -179,7 +179,7 @@ function createSchema(req, res, next) {
         password: Joi.string().min(6).required(),
         confirmPassword: Joi.string().valid(Joi.ref('password')).required(),
         role: Joi.string().valid(Role.Admin, Role.User).required(),
-        status: Joi.string().valid('active', 'inactive').default('active'),
+        status: Joi.string().valid('active', 'inactive', 'Active', 'Inactive').default('active'),
     });
     validateRequest(req, next, schema);
 }
@@ -198,7 +198,7 @@ function updateSchema(req, res, next) {
         email: Joi.string().email().empty(''),
         password: Joi.string().min(6).empty(''),
         confirmPassword: Joi.string().valid(Joi.ref('password')).empty(''),
-        status: Joi.string().valid('Active', 'Inactive', 'active', 'inactive').empty('') // Add status with both cases
+        status: Joi.string().valid('Active', 'Inactive', 'active', 'inactive').empty('') 
     };
 
     // only admins can update role

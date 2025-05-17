@@ -31,6 +31,10 @@ async function authenticate({ email, password, ipAddress }) {
         throw 'Email or password is incorrect';
     }
 
+    if (account.status === 'inactive' || account.status === 'Inactive') {
+        throw 'Account is inactive. Please contact an administrator.';
+    }
+
     // Authentication successful, so generate JWT and refresh tokens
     const jwtToken = generateJwtToken(account);
     const refreshToken = generateRefreshToken(account, ipAddress);
