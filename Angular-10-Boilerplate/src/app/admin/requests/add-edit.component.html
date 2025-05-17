@@ -11,6 +11,26 @@
         </select>
       </div>
       <div class="mb-3">
+    <label class="form-label">Employee</label>
+    
+    <!-- Show this when an employee is pre-selected -->
+    <div *ngIf="selectedEmployee" class="input-group">
+      <input type="text" class="form-control" readonly 
+         [value]="selectedEmployee.employeeId || 'EMP' + selectedEmployee.id">
+      <button class="btn btn-outline-secondary" type="button"
+        (click)="clearSelectedEmployee()">Change</button>
+    </div>
+    
+    <!-- Show dropdown when no employee is pre-selected -->
+    <select *ngIf="!selectedEmployee" class="form-control" 
+            [(ngModel)]="request.employeeId" name="employeeId" required>
+        <option value="">-- Select Employee --</option>
+        <option *ngFor="let employee of employees" [value]="employee.id">
+            {{employee.user.firstName}} {{employee.user.lastName}}
+        </option>
+    </select>
+</div>
+      <div class="mb-3">
         <label class="form-label">Items</label>
         <div *ngFor="let item of request.items; let i = index" class="border p-2 mb-2">
           <div class="row">

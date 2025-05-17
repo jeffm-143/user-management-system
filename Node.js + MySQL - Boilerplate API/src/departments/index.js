@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../helpers/db');
-const authorize = require('../middleware/authorize');
-const Role = require('../helpers/role');
+const db = require('../_helpers/db');  
+const authorize = require('../_middleware/authorize'); 
+const Role = require('../_helpers/role'); 
 
 router.post('/', authorize(Role.Admin), create);
 router.get('/', authorize(), getAll);
@@ -12,9 +12,12 @@ router.delete('/:id', authorize(Role.Admin), _delete);
 
 async function create(req, res, next) {
     try {
+        console.log('Creating department with data:', req.body);
         const department = await db.Department.create(req.body);
+        console.log('Department created:', department);
         res.status(201).json(department);
     } catch (err) {
+        console.error('Error creating department:', err);
         next(err);
     }
 }

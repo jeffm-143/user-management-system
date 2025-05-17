@@ -17,11 +17,11 @@ export class EmployeeService {
     }
 
     getByUserId(userId: string) {
-    return this.http.get<Employee>(`${environment.apiUrl}/employees/user/${userId}`);
-}
+        return this.http.get<Employee>(`${environment.apiUrl}/employees/user/${userId}`);
+    }
 
-    create(params: any) {
-        return this.http.post<Employee>(`${environment.apiUrl}/employees`, params);
+    create(employee: any) {
+    return this.http.post<any>(`${environment.apiUrl}/employees`, employee);
     }
 
     update(id: string, params: any) {
@@ -33,6 +33,6 @@ export class EmployeeService {
     }
     
     transfer(id: string, params: any) {
-        return this.http.put(`${environment.apiUrl}/employees/${id}/transfer`, params);
+    return this.http.put(`${environment.apiUrl}/employees/${id}/transfer`, params);
     }
 }

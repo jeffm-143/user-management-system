@@ -3,4 +3,4 @@ export * from './alert.service';
 export * from './departments.service';
 export * from './employees.service';
 export * from './requests.service';
-export * from './workflows.service';
+export * from './workflow.service';

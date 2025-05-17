@@ -7,7 +7,8 @@ import { RequestService, AccountService } from '@app/_services';
 @Component({ templateUrl: 'list.component.html' })
 export class ListComponent implements OnInit {
     requests: any[] = [];
-    employeeId?: string;
+    employeeId?: string;  // For filtering
+    selectedEmployeeId?: string;  // For new request form
 
     constructor(
         private requestService: RequestService,
@@ -18,21 +19,22 @@ export class ListComponent implements OnInit {
 
     ngOnInit() {
         this.route.queryParams.subscribe(params => {
-            this.employeeId = params['employeeId'];
+            this.employeeId = params['employeeId']; // Keep this for filtering if needed
+            this.selectedEmployeeId = params['selectedEmployeeId']; // New parameter
+            
+            // Always load all requests regardless of selectedEmployeeId
             this.loadRequests();
         });
     }
-
+    
     loadRequests() {
-        if (this.employeeId) {
-            this.requestService.getAllForEmployee(this.employeeId)
-                .pipe(first())
-                .subscribe(requests => this.requests = requests);
-        } else {
-            this.requestService.getAll()
-                .pipe(first())
-                .subscribe(requests => this.requests = requests);
-        }
+        // Always load all requests (no filtering)
+        this.requestService.getAll()
+            .pipe(first())
+            .subscribe(requests => {
+                console.log('Requests data:', requests);
+                this.requests = requests;
+            });
     }
 
     account() {
@@ -40,7 +42,15 @@ export class ListComponent implements OnInit {
     }
 
     add() {
-        this.router.navigate(['add'], { relativeTo: this.route });
+        // Pass the selectedEmployeeId to the add form if available
+        if (this.selectedEmployeeId) {
+            this.router.navigate(['add'], { 
+                relativeTo: this.route,
+                queryParams: { selectedEmployeeId: this.selectedEmployeeId }
+            });
+        } else {
+            this.router.navigate(['add'], { relativeTo: this.route });
+        }
     }
 
     edit(id: string) {

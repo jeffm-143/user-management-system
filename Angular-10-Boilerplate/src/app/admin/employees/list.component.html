@@ -43,3 +43,30 @@
         <button *ngIf="account()?.role === 'Admin'" class="btn btn-primary float-end" (click)="add()">Add Employee</button>
     </div>
 </div>
+
+<!-- Modal with ngIf for visibility control -->
+<div *ngIf="showTransferModal" class="modal-backdrop fade show"></div>
+<div *ngIf="showTransferModal" class="modal show d-block" tabindex="-1" aria-labelledby="transferModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="transferModalLabel">Transfer Employee: {{selectedEmployee?.employeeId || ''}}</h5>
+        <button type="button" class="btn-close" (click)="hideModal()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-danger" *ngIf="errorMessage">{{errorMessage}}</div>
+        <div class="mb-3">
+          <label class="form-label">Department</label>
+          <select class="form-select" [(ngModel)]="selectedDepartmentId">
+            <option value="">-- Select Department --</option>
+            <option *ngFor="let dept of departments" [value]="dept.id">{{dept.name}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="hideModal()">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="confirmTransfer()">Transfer</button>
+      </div>
+    </div>
+  </div>
+</div>
