@@ -1,0 +1,48 @@
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">
+            Workflows
+            <span *ngIf="employeeId" class="text-muted ms-2">for Employee {{employeeId}}</span>
+        </h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th style="width: 20%">Type</th>
+                        <th style="width: 50%">Details</th>
+                        <th style="width: 15%">Status</th>
+                        <th *ngIf="account()?.role === 'Admin'" style="width: 15%">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let workflow of workflows">
+                        <td>{{workflow.type}}</td>
+                        <td>
+                            <ng-container *ngIf="workflow.details">
+                                <div *ngFor="let key of getObjectKeys(workflow.details)">
+                                    <strong>{{key}}:</strong> {{workflow.details[key]}}
+                                </div>
+                            </ng-container>
+                            <span *ngIf="!workflow.details">No details</span>
+                        </td>
+                        <td>{{workflow.status || 'Pending'}}</td>
+                        <td *ngIf="account()?.role === 'Admin'">
+                            <select class="form-select form-select-sm" [(ngModel)]="workflow._status" 
+                                    (change)="updateWorkflowStatus(workflow.id, workflow._status)">
+                                <option value="Pending">Pending</option>
+                                <option value="Approved">Approved</option>
+                                <option value="Rejected">Rejected</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr *ngIf="!workflows || workflows.length === 0">
+                        <td colspan="4" class="text-center">No workflows found</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
