@@ -1,9 +1,9 @@
-
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { ListComponent } from './list.component'; 
+import { ListComponent } from './list.component';
 import { AddEditComponent } from './add-edit.component';
+
 const routes: Routes = [
     { path: '', component: ListComponent },
     { path: 'add', component: AddEditComponent },
@@ -11,7 +11,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-    imports:[RouterModule.forChild(routes)],
+    imports: [RouterModule.forChild(routes)],
     exports: [RouterModule]
 })
-export class AccountsRoutingModule { }
+export class RequestsRoutingModule { }
