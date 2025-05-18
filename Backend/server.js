@@ -56,12 +56,11 @@ app.use('/requests', require('./src/request'));
 // workflows routes
 app.use('/workflows', require('./src/workflows'));
 
-app.use(express.static(path.join(__dirname, 'dist')));
+app.use(express.static(path.join(__dirname, '../Frontend/dist/angular-signup-verification-boilerplate')));
 
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist/index.html'));
+  res.sendFile(path.join(__dirname, '../Frontend/dist/angular-signup-verification-boilerplate/index.html'));
 });
-
 
 // global error handler
 app.use(errorHandler);
