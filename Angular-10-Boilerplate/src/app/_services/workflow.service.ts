@@ -31,6 +31,9 @@ export class WorkflowService {
     }
 
     updateStatus(id: string, status: string) {
-        return this.http.put(`${environment.apiUrl}/workflows/${id}/status`, { status });
+        return this.http.put(`${environment.apiUrl}/workflows/${id}/status`, { 
+            status,
+            updateRequest: true  
+        });
     }
 }

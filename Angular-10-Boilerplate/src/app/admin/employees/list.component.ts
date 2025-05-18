@@ -90,11 +90,7 @@ export class ListComponent implements OnInit {
         return;
     }
     
-    // Log what we're sending to the API for debugging
-    console.log('Transferring employee:', this.selectedEmployee.id);
-    console.log('To department:', this.selectedDepartmentId);
-    
-    // Call API - make sure departmentId is passed as a NUMBER if that's what your API expects
+    // Call API
     const params = { departmentId: parseInt(this.selectedDepartmentId) }; 
     
     this.employeeService.transfer(this.selectedEmployee.id, params)
@@ -104,12 +100,14 @@ export class ListComponent implements OnInit {
                 // Hide the modal
                 this.hideModal();
                 
-                // Update the employee in the list immediately
+                // Find the selected department from our departments list
+                const newDepartment = this.departments.find(d => d.id === parseInt(this.selectedDepartmentId));
+                
+                // Update the employee in the list with the full department object
                 const updatedEmployee = this.employees.find(e => e.id === this.selectedEmployee.id);
                 if (updatedEmployee) {
-                    updatedEmployee.departmentId = this.selectedDepartmentId;
-                    // Also update the department name display
-                    updatedEmployee.department = this.departments.find(d => d.id === this.selectedDepartmentId);
+                    updatedEmployee.departmentId = parseInt(this.selectedDepartmentId);
+                    updatedEmployee.department = newDepartment; // This is the key fix
                 }
                 
                 // Show success message
@@ -118,6 +116,7 @@ export class ListComponent implements OnInit {
                 // Reset
                 this.selectedEmployee = null;
                 this.selectedDepartmentId = '';
+                this.errorMessage = '';
             },
             error: error => {
                 console.error('Transfer failed:', error);
