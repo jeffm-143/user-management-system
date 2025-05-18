@@ -1,57 +1,123 @@
-<div class="card">
-    <div class="card-header">{{id ? 'Edit' : 'Add'}} Request</div>
-    <div class="card-body">
-      <div class="alert alert-danger" *ngIf="errorMessage">{{errorMessage}}</div>
-      <div class="mb-3">
-        <label class="form-label">Type</label>
-        <select class="form-select" [(ngModel)]="request.type">
-          <option>Equipment</option>
-          <option>Leave</option>
-          <option>Resources</option>
-        </select>
-      </div>
-      <div class="mb-3">
-    <label class="form-label">Employee</label>
-    
-    <!-- Show this when an employee is pre-selected -->
-    <div *ngIf="selectedEmployee" class="input-group">
-      <input type="text" class="form-control" readonly 
-         [value]="selectedEmployee.employeeId || 'EMP' + selectedEmployee.id">
-      <button class="btn btn-outline-secondary" type="button"
-        (click)="clearSelectedEmployee()">Change</button>
+<div class="container">
+  <div class="card shadow-sm mb-4">
+    <div class="card-header bg-primary text-white">
+      <h2 class="mb-0">{{id ? 'Edit' : 'Create New'}} Request</h2>
     </div>
-    
-    <!-- Show dropdown when no employee is pre-selected -->
-    <select *ngIf="!selectedEmployee" class="form-control" 
-            [(ngModel)]="request.employeeId" name="employeeId" required>
-        <option value="">-- Select Employee --</option>
-        <option *ngFor="let employee of employees" [value]="employee.id">
-            {{employee.user.firstName}} {{employee.user.lastName}}
-        </option>
-    </select>
-</div>
-      <div class="mb-3">
-        <label class="form-label">Items</label>
-        <div *ngFor="let item of request.items; let i = index" class="border p-2 mb-2">
+    <div class="card-body">
+      <div class="alert alert-danger d-flex align-items-center" *ngIf="errorMessage">
+        <i class="fa fa-exclamation-circle mr-2"></i>
+        <div>{{errorMessage}}</div>
+      </div>
+
+      <!-- Request Information Section -->
+      <div class="card mb-4">
+        <div class="card-header bg-light">
+          <h5 class="mb-0">Request Details</h5>
+        </div>
+        <div class="card-body">
           <div class="row">
-            <div class="col-md-5">
-              <label class="form-label">Name</label>
-              <input type="text" class="form-control" [(ngModel)]="item.name">
+            <div class="col-md-6 mb-3">
+              <label class="form-label font-weight-bold">Request Type</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fa fa-tag"></i></span>
+                </div>
+                <select class="form-select form-control" [(ngModel)]="request.type">
+                  <option>Equipment</option>
+                  <option>Leave</option>
+                  <option>Resources</option>
+                </select>
+              </div>
             </div>
-            <div class="col-md-5">
-              <label class="form-label">Quantity</label>
-              <input type="number" class="form-control" [(ngModel)]="item.quantity">
-            </div>
-            <div class="col-md-2 d-flex align-items-end">
-              <button class="btn btn-danger" (click)="removeItem(i)">Remove</button>
+            
+            <div class="col-md-6 mb-3">
+              <label class="form-label font-weight-bold">Employee</label>
+              <!-- Show this when an employee is pre-selected -->
+              <div *ngIf="selectedEmployee" class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fa fa-user"></i></span>
+                </div>
+                <input type="text" class="form-control" readonly 
+                  [value]="selectedEmployee.employeeId || 'EMP' + selectedEmployee.id">
+                <div class="input-group-append">
+                  <button class="btn btn-outline-secondary" type="button"
+                    (click)="clearSelectedEmployee()">
+                    <i class="fa fa-times mr-1"></i> Change
+                  </button>
+                </div>
+              </div>
+              
+              <!-- Show dropdown when no employee is pre-selected -->
+              <div *ngIf="!selectedEmployee" class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fa fa-user"></i></span>
+                </div>
+                <select class="form-select form-control" 
+                  [(ngModel)]="request.employeeId" name="employeeId" required>
+                  <option value="">-- Select Employee --</option>
+                  <option *ngFor="let employee of employees" [value]="employee.id">
+                    {{employee.user.firstName}} {{employee.user.lastName}}
+                  </option>
+                </select>
+              </div>
             </div>
           </div>
         </div>
-        <button class="btn btn-secondary" (click)="addItem()">Add Item</button>
+      </div>
+
+      <!-- Items Section -->
+      <div class="card mb-4">
+        <div class="card-header bg-light d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">Request Items</h5>
+          <button class="btn btn-sm btn-secondary" (click)="addItem()">
+            <i class="fa fa-plus mr-1"></i> Add Item
+          </button>
+        </div>
+        <div class="card-body">
+          <div *ngIf="!request.items || !request.items.length" class="alert alert-info">
+            <i class="fa fa-info-circle mr-2"></i> No items added yet. Click "Add Item" to begin.
+          </div>
+          
+          <div *ngFor="let item of request.items; let i = index" class="card mb-3">
+            <div class="card-body py-2">
+              <div class="row">
+                <div class="col-md-5 mb-2">
+                  <label class="form-label font-weight-bold">Item Name</label>
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="fa fa-cube"></i></span>
+                    </div>
+                    <input type="text" class="form-control" [(ngModel)]="item.name" placeholder="Enter item name">
+                  </div>
+                </div>
+                <div class="col-md-5 mb-2">
+                  <label class="form-label font-weight-bold">Quantity</label>
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="fa fa-hashtag"></i></span>
+                    </div>
+                    <input type="number" class="form-control" [(ngModel)]="item.quantity" min="1">
+                  </div>
+                </div>
+                <div class="col-md-2 d-flex align-items-end mb-2">
+                  <button class="btn btn-danger w-100" (click)="removeItem(i)">
+                    <i class="fa fa-trash mr-1"></i> Remove
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group d-flex justify-content-between">
+        <button class="btn btn-secondary" (click)="cancel()">
+          <i class="fa fa-arrow-left mr-1"></i> Back
+        </button>
+        <button class="btn btn-success" (click)="save()">
+          <i class="fa fa-save mr-1"></i> Save Request
+        </button>
       </div>
     </div>
-    <div class="text-center">
-      <button class="btn btn-primary me-2" (click)="save()">Save</button>
-      <button class="btn btn-secondary" (click)="cancel()">Cancel</button>
-    </div>
   </div>
+</div>

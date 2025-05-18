@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, throwError } from 'rxjs';
-import { map, finalize, catchError } from 'rxjs/operators';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { map, finalize } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
 import { Account } from '@app/_models';
@@ -13,10 +13,6 @@ const baseUrl = `${environment.apiUrl}/accounts`;
 export class AccountService {
     private accountSubject: BehaviorSubject<Account>;
     public account: Observable<Account>;
-    private refreshTokenTimeout;
-    private refreshTokenErrorCount = 0;
-    private maxRefreshAttempts = 3;
-    private refreshInProgress = false;
 
     constructor(
         private router: Router,
@@ -40,72 +36,19 @@ export class AccountService {
     }
 
     logout() {
-        // First stop any pending refresh timers
+        this.http.post<any>(`${baseUrl}/revoke-token`, {}, { withCredentials: true }).subscribe();
         this.stopRefreshTokenTimer();
-        
-        // Then attempt to revoke the token on the server
-        this.http.post<any>(`${baseUrl}/revoke-token`, {}, { withCredentials: true })
-            .pipe(
-                catchError(error => {
-                    console.log('Error revoking token:', error);
-                    return throwError(() => error);
-                })
-            )
-            .subscribe({
-                complete: () => {
-                    // Continue with logout regardless of server response
-                    this.accountSubject.next(null);
-                    this.router.navigate(['/account/login']);
-                }
-            });
+        this.accountSubject.next(null);
+        this.router.navigate(['/account/login']);
     }
 
     refreshToken() {
-        // Prevent multiple simultaneous refresh requests
-        if (this.refreshInProgress) {
-            return throwError(() => new Error('Refresh already in progress'));
-        }
-
-        // Reset counter if we've exceeded the max attempts
-        if (this.refreshTokenErrorCount >= this.maxRefreshAttempts) {
-            console.log('Max token refresh attempts reached, logging out');
-            this.stopRefreshTokenTimer();
-            this.logout();
-            return throwError(() => new Error('Max refresh attempts reached'));
-        }
-        
-        this.refreshInProgress = true;
-        
-        return this.http.post<any>(`${environment.apiUrl}/accounts/refresh-token`, {}, { withCredentials: true })
-            .pipe(
-                map(account => {
-                    this.refreshTokenErrorCount = 0; // Reset on success
-                    this.accountSubject.next(account);
-                    this.startRefreshTokenTimer();
-                    return account;
-                }),
-                catchError(error => {
-                    this.refreshTokenErrorCount++;
-                    console.log(`Token refresh error (${this.refreshTokenErrorCount}/${this.maxRefreshAttempts}):`, error);
-                    
-                    if (this.refreshTokenErrorCount >= this.maxRefreshAttempts) {
-                        this.stopRefreshTokenTimer();
-                        this.logout();
-                    }
-                    
-                    return throwError(() => error);
-                }),
-                finalize(() => {
-                    this.refreshInProgress = false; // Mark as complete regardless of success/failure
-                })
-            );
-    }
-
-    private stopRefreshTokenTimer() {
-        if (this.refreshTokenTimeout) {
-            clearTimeout(this.refreshTokenTimeout);
-            this.refreshTokenTimeout = null; // Add this to fully clear the reference
-        }
+        return this.http.post<any>(`${baseUrl}/refresh-token`, {}, { withCredentials: true })
+            .pipe(map(account => {
+                this.accountSubject.next(account);
+                this.startRefreshTokenTimer();
+                return account;
+            }));
     }
 
     register(account: Account) {
@@ -163,6 +106,9 @@ export class AccountService {
     }
 
     // helper methods
+
+    private refreshTokenTimeout;
+
     private startRefreshTokenTimer() {
         // parse json object from base64 encoded jwt token
         const jwtToken = JSON.parse(atob(this.accountValue.jwtToken.split('.')[1]));
@@ -170,16 +116,10 @@ export class AccountService {
         // set a timeout to refresh the token a minute before it expires
         const expires = new Date(jwtToken.exp * 1000);
         const timeout = expires.getTime() - Date.now() - (60 * 1000);
-        
-        // Make sure we're not setting an immediate or negative timeout
-        const safeTimeout = Math.max(timeout, 5 * 60 * 1000); // Minimum 5 minutes
-        
-        console.log(`Token refresh scheduled in ${Math.round(safeTimeout/1000)} seconds`);
-        this.refreshTokenTimeout = setTimeout(() => this.refreshToken().subscribe(), safeTimeout);
+        this.refreshTokenTimeout = setTimeout(() => this.refreshToken().subscribe(), timeout);
     }
 
-    // Add a method to clean up tokens when needed
-    cleanupTokens() {
-        return this.http.post<any>(`${baseUrl}/cleanup-tokens`, {}, { withCredentials: true });
+    private stopRefreshTokenTimer() {
+        clearTimeout(this.refreshTokenTimeout);
     }
 }

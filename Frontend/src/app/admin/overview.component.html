@@ -1,7 +1,64 @@
 <div class="p-4">
     <div class="container">
-        <h1>Admin</h1>
-        <p>This section can only be accessed by administrators.</p>
-        
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-primary text-white">
+                <h2 class="mb-0">Admin Dashboard</h2>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info d-flex align-items-center">
+                    <i class="fa fa-info-circle fa-2x mr-3"></i>
+                    <div>
+                        <strong>Welcome to the Admin Area</strong>
+                        <p class="mb-0">This section can only be accessed by administrators. Use the navigation above to manage system resources.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-md-4">
+                        <div class="card mb-4 shadow-sm">
+                            <div class="card-body text-center">
+                                <div class="mb-3">
+                                    <i class="fa fa-users fa-3x text-primary"></i>
+                                </div>
+                                <h5 class="card-title">User Management</h5>
+                                <p class="card-text">Manage user accounts, roles, and permissions</p>
+                                <a routerLink="/admin/accounts" class="btn btn-outline-primary">
+                                    <i class="fa fa-arrow-right mr-1"></i> Accounts
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card mb-4 shadow-sm">
+                            <div class="card-body text-center">
+                                <div class="mb-3">
+                                    <i class="fa fa-id-card fa-3x text-success"></i>
+                                </div>
+                                <h5 class="card-title">Employee Management</h5>
+                                <p class="card-text">Manage employee records and department assignments</p>
+                                <a routerLink="/admin/employees" class="btn btn-outline-success">
+                                    <i class="fa fa-arrow-right mr-1"></i> Employees
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card mb-4 shadow-sm">
+                            <div class="card-body text-center">
+                                <div class="mb-3">
+                                    <i class="fa fa-clipboard-list fa-3x text-warning"></i>
+                                </div>
+                                <h5 class="card-title">Request Management</h5>
+                                <p class="card-text">Track and manage employee requests and workflows</p>
+                                <a routerLink="/admin/requests" class="btn btn-outline-warning">
+                                    <i class="fa fa-arrow-right mr-1"></i> Requests
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
