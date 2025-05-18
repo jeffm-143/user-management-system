@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const errorHandler = require('./src/_middleware/error-handler');
+const path = require('path');
 
 
 app.use(cors({
@@ -53,6 +54,12 @@ app.use('/requests', require('./src/request'));
 
 // workflows routes
 app.use('/workflows', require('./src/workflows'));
+
+app.use(express.static(path.join(__dirname, '../Frontend/dist/angular-signup-verification-boilerplate')));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../Frontend/dist/angular-signup-verification-boilerplate/index.html'));
+});
 
 // global error handler
 app.use(errorHandler);
