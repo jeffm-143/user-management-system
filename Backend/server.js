@@ -65,3 +65,5 @@ const port = process.env.PORT || 4000;
 app.listen(port, () => {
     console.log('Server listening on port ' + port);
 });
+
+process.env.JWT_SECRET = process.env.JWT_SECRET || 'b28a97b3-7a3a-4a35-8bfa-41d9d2191949';
