@@ -1,5 +1,6 @@
 const mysql = require('mysql2/promise');
 const { Sequelize } = require('sequelize');
+const config = require('./config');
 
 module.exports = db = {};
 
@@ -7,11 +8,7 @@ initialize();
 
 async function initialize() {
     // create db if it doesn't already exist
-    const host = process.env.DB_HOST || '153.92.15.31';
-    const port = process.env.DB_PORT || 3306;
-    const user = process.env.DB_USER || 'u875409848_sagaral';
-    const password = process.env.DB_PASSWORD || '9T2Z5$3UKkgSYzE';
-    const database = process.env.DB_NAME || 'u875409848_sagaral';
+    const { host, user, password, port, database } = config.db;
 
     const connection = await mysql.createConnection({ host, user, password, port });
     await connection.query(`CREATE DATABASE IF NOT EXISTS \`${database}\`;`);
@@ -32,6 +29,30 @@ async function initialize() {
     db.RequestItem = require('../request/request-item.model')(sequelize);
     db.Workflow = require('../workflows/workflow.model')(sequelize);
 
-    // sync all models with database
-    await sequelize.sync();
+  // define relationships
+  db.Account.hasMany(db.RefreshToken, { onDelete: 'CASCADE' });
+  db.RefreshToken.belongsTo(db.Account);
+  
+  // Department-Employee relationship
+db.Department.hasMany(db.Employee, { foreignKey: 'departmentId' });
+db.Employee.belongsTo(db.Department, { foreignKey: 'departmentId', as: 'department' });
+
+  // Employee-Request relationship
+db.Employee.hasMany(db.Request, { foreignKey: 'employeeId' });
+db.Request.belongsTo(db.Employee, { foreignKey: 'employeeId' });
+
+  // Request-RequestItem relationship
+db.Request.hasMany(db.RequestItem, { foreignKey: 'requestId', onDelete: 'CASCADE' });
+db.RequestItem.belongsTo(db.Request, { foreignKey: 'requestId' });
+
+  // Employee-Workflow relationship
+db.Employee.hasMany(db.Workflow, { foreignKey: 'employeeId' });
+db.Workflow.belongsTo(db.Employee, { foreignKey: 'employeeId' });
+
+  // Account-Employee relationship
+db.Account.hasOne(db.Employee, { foreignKey: 'userId' });
+db.Employee.belongsTo(db.Account, { foreignKey: 'userId', as: 'user' });
+
+  // sync all models with database
+  await sequelize.sync({ alter: true });
 }
