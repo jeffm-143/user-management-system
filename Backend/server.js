@@ -1,12 +1,9 @@
-require('rootpath')();
-const express = require('express');
-const app = express();
-const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser');
-const cors = require('cors');
-const errorHandler = require('./src/_middleware/error-handler');
-const path = require('path');
-
+app.use('/accounts', require('./src/_accounts/accounts.controller'));
+app.use('/api-docs', require('./src/_helpers/swagger'));
+app.use('/departments', require('./src/departments'));
+app.use('/employees', require('./src/employees'));
+app.use('/requests', require('./src/request'));
+app.use('/workflows', require('./src/workflows'));
 
 app.use(cors({
   origin: function(origin, callback) {
@@ -58,9 +55,13 @@ app.use('/workflows', require('./src/workflows'));
 
 app.use(express.static(path.join(__dirname, '../Frontend/src')));
 
-// This should be after all your API routes
+// Handle Angular routing - This should be after all API routes
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../Frontend/src/index.html'));
+  if (req.path === '/') {
+    res.redirect('/account/login');
+  } else {
+    res.sendFile(path.join(__dirname, '../Frontend/src/index.html'));
+  }
 });
 
 // global error handler
