@@ -15,7 +15,8 @@ app.use(cors({
     
     const allowedOrigins = [
       'https://4200-firebase-user-management-system-1747518362589.cluster-zumahodzirciuujpqvsniawo3o.cloudworkstations.dev',
-      'http://localhost:4200'
+      'http://localhost:4200',
+      'https://your-render-frontend-url.onrender.com' 
     ];
     
     if (allowedOrigins.indexOf(origin) !== -1) {
