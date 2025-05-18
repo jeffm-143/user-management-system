@@ -31,6 +31,14 @@ app.use('/requests', require('./src/request'));
 // workflows routes
 app.use('/workflows', require('./src/workflows'));
 
+
+app.use(express.static(__dirname + '/dist/user-management-system'));
+
+// Send all requests to index.html
+app.get('/*', function(req, res) {
+  res.sendFile(path.join(__dirname + '/dist/user-management-system/index.html'));
+});
+
 // global error handler
 app.use(errorHandler);
 
