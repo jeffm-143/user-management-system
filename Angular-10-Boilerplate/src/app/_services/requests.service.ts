@@ -13,8 +13,8 @@ export class RequestService {
         return this.http.get<Request[]>(`${environment.apiUrl}/requests`);
     }
 
-    getAllForEmployee(employeeId: string): Observable<Request[]> {
-        return this.http.get<Request[]>(`${environment.apiUrl}/employees/${employeeId}/requests`);
+    getAllForEmployee(employeeId: string) {
+        return this.http.get<any[]>(`${environment.apiUrl}/requests?employeeId=${employeeId}`);
     }
 
     getById(id: string): Observable<Request> {
@@ -39,5 +39,8 @@ export class RequestService {
     
     reject(id: string): Observable<any> {
         return this.http.put(`${environment.apiUrl}/requests/${id}/reject`, {});
+    }
+    getRelatedWorkflows(requestId: string) {
+        return this.http.get<any[]>(`${environment.apiUrl}/workflows?requestId=${requestId}`);
     }
 }

@@ -11,6 +11,7 @@ function model(sequelize) {
         lastName: { type: DataTypes.STRING, allowNull: false },
         acceptTerms: { type: DataTypes.BOOLEAN },
         role: { type: DataTypes.STRING, allowNull: false },
+        status: { type: DataTypes.STRING, allowNull: false, defaultValue: 'active' },
         verificationToken: { type: DataTypes.STRING },
         verified: { type: DataTypes.DATE },
         resetToken: { type: DataTypes.STRING },

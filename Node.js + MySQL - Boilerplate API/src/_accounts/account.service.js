@@ -102,6 +102,7 @@ async function register(params, origin) {
     const isFirstAccount = (await db.Account.count()) === 0;
     account.role = isFirstAccount ? Role.Admin : Role.User;
     account.verificationToken = randomTokenString();
+    account.status = 'active';
 
     // hash password
     account.passwordHash = await hash(params.password);
@@ -178,9 +179,10 @@ async function create(params) {
 
     const account = new db.Account(params);
     account.verified = Date.now();
+    account.status = 'active';
 
     // hash password
-    account.passwordHash = hash(params.password);
+    account.passwordHash = await hash(params.password);
 
     // save account
     await account.save();
@@ -188,6 +190,7 @@ async function create(params) {
     return basicDetails(account);
 }
 ///////////////////////////////////////////////////////////////////////////////////
+// In the update function
 async function update(id, params) {
     const account = await getAccount(id);
 
@@ -196,11 +199,17 @@ async function update(id, params) {
         throw 'Email "' + params.email + '" is already taken';
     }
 
-    if (params.password) {
-        params.passwordHash = hash(params.password);
+    // Convert status to lowercase to match database expectations
+    if (params.status) {
+        params.status = params.status.toLowerCase();
+        console.log('Setting account status to:', params.status);
     }
 
-    // copy params to account and save\
+    if (params.password) {
+        params.passwordHash = await hash(params.password);
+    }
+
+    // copy params to account and save
     Object.assign(account, params);
     account.updated = Date.now();
     await account.save();
@@ -252,8 +261,8 @@ function randomTokenString() {
 }
 ///////////////////////////////////////////////////////////////////////////////////
 function basicDetails(account) {
-    const { id, title, firstName, lastName, email, role, created, updated, isVerified } = account;
-    return { id, title, firstName, lastName, email, role, created, updated, isVerified };
+    const { id, title, firstName, lastName, email, role, status, created, updated, isVerified } = account;
+    return { id, title, firstName, lastName, email, role, status, created, updated, isVerified };
 }
 ///////////////////////////////////////////////////////////////////////////////////
 async function sendVerificationEmail(account, origin) {

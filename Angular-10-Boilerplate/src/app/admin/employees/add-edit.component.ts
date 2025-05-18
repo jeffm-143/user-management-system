@@ -31,7 +31,7 @@ export class AddEditComponent implements OnInit {
 
     ngOnInit() {
         this.id = this.route.snapshot.params['id'];
-        
+
         // Load all users that can be employees
         this.accountService.getAll()
             .pipe(first())
@@ -41,7 +41,7 @@ export class AddEditComponent implements OnInit {
         this.departmentService.getAll()
             .pipe(first())
             .subscribe(departments => this.departments = departments);
-        
+
         if (this.id) {
             // edit mode
             this.employeeService.getById(this.id)
@@ -50,44 +50,74 @@ export class AddEditComponent implements OnInit {
                     employee => this.employee = employee,
                     error => this.errorMessage = error
                 );
+        } else {
+            // For new employee, fetch all employees to determine next employeeId
+            this.employeeService.getAll()
+                .pipe(first())
+                .subscribe(
+                    (employees: any[]) => {
+                        // Find the highest employeeId in the format EMP###
+                        let maxId = 0;
+                        employees.forEach(emp => {
+                            const match = /^EMP(\d+)$/.exec(emp.employeeId);
+                            if (match) {
+                                const num = parseInt(match[1], 10);
+                                if (num > maxId) maxId = num;
+                            }
+                        });
+                        const nextId = 'EMP' + (maxId + 1).toString().padStart(3, '0');
+                        this.employee.employeeId = nextId;
+                    },
+                    error => {
+                        this.employee.employeeId = "EMP001";
+                    }
+                );
         }
     }
+    onDepartmentChange() {
+    console.log('Department selected:', this.employee.departmentId);
+}
 
     save() {
-        // validate the form
-        if (!this.employee.employeeId || !this.employee.userId || 
-            !this.employee.position || !this.employee.departmentId || 
-            !this.employee.hireDate || !this.employee.status) {
-            this.errorMessage = 'Please fill in all required fields';
-            return;
-        }
-
-        if (this.id) {
-            // update employee
-            this.employeeService.update(this.id, this.employee)
-                .pipe(first())
-                .subscribe(
-                    () => {
-                        this.router.navigate(['/admin/employees']);
-                    },
-                    error => {
-                        this.errorMessage = error;
-                    }
-                );
-        } else {
-            // create employee
-            this.employeeService.create(this.employee)
-                .pipe(first())
-                .subscribe(
-                    () => {
-                        this.router.navigate(['/admin/employees']);
-                    },
-                    error => {
-                        this.errorMessage = error;
-                    }
-                );
-        }
+    // validate the form
+    if (!this.employee.userId || 
+        !this.employee.position || !this.employee.departmentId || 
+        !this.employee.hireDate || !this.employee.status) {
+        this.errorMessage = 'Please fill in all required fields';
+        return;
     }
+
+    // Let the server generate employeeId if not provided
+    if (!this.id && !this.employee.employeeId) {
+        this.employee.employeeId = ''; // Server will generate it
+    }
+
+    if (this.id) {
+        // update employee
+        this.employeeService.update(this.id, this.employee)
+            .pipe(first())
+            .subscribe({
+                next: () => {
+                    this.router.navigate(['/admin/employees']);
+                },
+                error: error => {
+                    this.errorMessage = error;
+                }
+            });
+    } else {
+        // create employee
+        this.employeeService.create(this.employee)
+            .pipe(first())
+            .subscribe({
+                next: () => {
+                    this.router.navigate(['/admin/employees']);
+                },
+                error: error => {
+                    this.errorMessage = error;
+                }
+            });
+    }
+}
 
     cancel() {
         this.router.navigate(['/admin/employees']);

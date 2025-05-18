@@ -35,39 +35,41 @@ export class AddEditComponent implements OnInit {
         }
     }
 
-    save() {
-        // validate the form
-        if (!this.department.name || !this.department.description) {
-            this.errorMessage = 'Please fill in all required fields';
-            return;
-        }
-
-        if (this.id) {
-            // update department
-            this.departmentService.update(this.id, this.department)
-                .pipe(first())
-                .subscribe(
-                    () => {
-                        this.router.navigate(['/admin/departments']);
-                    },
-                    error => {
-                        this.errorMessage = error;
-                    }
-                );
-        } else {
-            // create department
-            this.departmentService.create(this.department)
-                .pipe(first())
-                .subscribe(
-                    () => {
-                        this.router.navigate(['/admin/departments']);
-                    },
-                    error => {
-                        this.errorMessage = error;
-                    }
-                );
-        }
+save() {
+    // validate the form
+    if (!this.department.name || !this.department.description) {
+        this.errorMessage = 'Please fill in all required fields';
+        return;
     }
+
+    console.log('Saving department with data:', this.department);
+
+    if (this.id) {
+        // update department
+        this.departmentService.update(this.id, this.department)
+            .pipe(first())
+            .subscribe({
+                next: () => {
+                    this.router.navigate(['/admin/departments']);
+                },
+                error: error => {
+                    this.errorMessage = error;
+                }
+            });
+    } else {
+        // create department
+        this.departmentService.create(this.department)
+            .pipe(first())
+            .subscribe({
+                next: () => {
+                    this.router.navigate(['/admin/departments']);
+                },
+                error: error => {
+                    this.errorMessage = error;
+                }
+            });
+    }
+}
 
     cancel() {
         this.router.navigate(['/admin/departments']);
