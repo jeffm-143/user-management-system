@@ -1,41 +1,102 @@
-<div class="card">
-    <div class="card-header">{{id ? 'Edit' : 'Add'}} Employee</div>
+<div class="container">
+  <div class="card shadow-sm mb-4">
+    <div class="card-header bg-primary text-white">
+      <h2 class="mb-0">{{id ? 'Edit' : 'Create New'}} Employee</h2>
+    </div>
     <div class="card-body">
-      <div class="alert alert-danger" *ngIf="errorMessage">{{errorMessage}}</div>
-      <div class="mb-3">
-        <label class="form-label">Employee ID</label>
-        <input type="text" class="form-control" [(ngModel)]="employee.employeeId" [disabled]="!!id">
+      <div class="alert alert-danger d-flex align-items-center" *ngIf="errorMessage">
+        <i class="fa fa-exclamation-circle mr-2"></i>
+        <div>{{errorMessage}}</div>
       </div>
-      <div class="mb-3">
-        <label class="form-label">User</label>
-        <select class="form-select" [(ngModel)]="employee.userId">
-          <option *ngFor="let user of users" [value]="user.id">{{user.email}}</option>
-        </select>
+
+      <div class="card mb-4">
+        <div class="card-header bg-light">
+          <h5 class="mb-0">Employee Information</h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label font-weight-bold">Employee ID</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fa fa-id-card"></i></span>
+                </div>
+                <input type="text" class="form-control" [(ngModel)]="employee.employeeId" [disabled]="!!id"
+                  placeholder="Enter employee ID">
+              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label font-weight-bold">User Account</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fa fa-user"></i></span>
+                </div>
+                <select class="form-select form-control" [(ngModel)]="employee.userId">
+                  <option value="">-- Select User --</option>
+                  <option *ngFor="let user of users" [value]="user.id">{{user.email}}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label font-weight-bold">Position</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fa fa-briefcase"></i></span>
+                </div>
+                <input type="text" class="form-control" [(ngModel)]="employee.position" placeholder="Enter job position">
+              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label font-weight-bold">Department</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fa fa-building"></i></span>
+                </div>
+                <select class="form-select form-control" [(ngModel)]="employee.departmentId">
+                  <option value="">-- Select Department --</option>
+                  <option *ngFor="let dept of departments" [value]="dept.id">{{dept.name}}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label font-weight-bold">Hire Date</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                </div>
+                <input type="date" class="form-control" [(ngModel)]="employee.hireDate">
+              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label font-weight-bold">Status</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fa fa-toggle-on"></i></span>
+                </div>
+                <select class="form-select form-control" [(ngModel)]="employee.status">
+                  <option>Active</option>
+                  <option>Inactive</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="mb-3">
-        <label class="form-label">Position</label>
-        <input type="text" class="form-control" [(ngModel)]="employee.position">
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Department</label>
-        <select class="form-select" [(ngModel)]="employee.departmentId">
-          <option *ngFor="let dept of departments" [value]="dept.id">{{dept.name}}</option>
-        </select>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Hire Date</label>
-        <input type="date" class="form-control" [(ngModel)]="employee.hireDate">
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Status</label>
-        <select class="form-select" [(ngModel)]="employee.status">
-          <option>Active</option>
-          <option>Inactive</option>
-        </select>
-      </div>
-      <div class="text-center">
-        <button class="btn btn-primary me-2" (click)="save()">Save</button>
-        <button class="btn btn-secondary" (click)="cancel()">Cancel</button>
+
+      <div class="form-group d-flex justify-content-between">
+        <button class="btn btn-secondary" (click)="cancel()">
+          <i class="fa fa-arrow-left mr-1"></i> Back
+        </button>
+        <button class="btn btn-success" (click)="save()">
+          <i class="fa fa-save mr-1"></i> Save Employee
+        </button>
       </div>
     </div>
   </div>
+</div>
