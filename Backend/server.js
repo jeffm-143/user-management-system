@@ -6,12 +6,35 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const errorHandler = require('./src/_middleware/error-handler');
 
+
+app.use(cors({
+  origin: function(origin, callback) {
+    // Allow requests with no origin (like mobile apps, curl requests)
+    if (!origin) return callback(null, true);
+    
+    const allowedOrigins = [
+      'https://4200-firebase-user-management-system-1747518362589.cluster-zumahodzirciuujpqvsniawo3o.cloudworkstations.dev',
+      'http://localhost:4200'
+    ];
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      console.log('Origin not allowed by CORS:', origin);
+      callback(null, true); // In development, allow all origins
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization']
+}));
+
+// Handle preflight requests
+app.options('*', cors());
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cookieParser());
-
-// allow cors requests from any origin and with credentials
-app.use(cors({ origin: (origin, callback) => callback(null, true), credentials: true }));
 
 // api routes
 app.use('/accounts', require('./src/_accounts/accounts.controller'));

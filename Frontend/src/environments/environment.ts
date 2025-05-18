@@ -3,9 +3,9 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-    production: false,
-    apiUrl: 'http://localhost:4000'
-  };
+  production: false,
+  apiUrl: 'https://4000-firebase-user-management-system-1747518362589.cluster-zumahodzirciuujpqvsniawo3o.cloudworkstations.dev'
+};
   
   /*
   * For easier debugging in development mode, you can import the following file
