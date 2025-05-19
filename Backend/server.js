@@ -12,7 +12,7 @@ app.use(cookieParser());
 
 const allowedOrigins = [
   'http://localhost:4200',
-  'https://user-management-frontend.onrender.com',
+  'https://user-management-system-l1r3.onrender.com',
   'https://monreal-user-management-frontend.onrender.com'
 ];
 
