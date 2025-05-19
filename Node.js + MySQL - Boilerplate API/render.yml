@@ -1,5 +1,5 @@
 services:
-  - name: monreal-user-management-frontend
+  - name: monreal-user-management
     type: web
     env: node
     plan: free
