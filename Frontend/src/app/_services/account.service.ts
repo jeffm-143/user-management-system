@@ -12,6 +12,7 @@ const baseUrl = `${environment.apiUrl}/accounts`;
 @Injectable({ providedIn: 'root' })
 export class AccountService {
     private accountSubject: BehaviorSubject<Account>;
+    private apiUrl = environment.apiUrl;
     public account: Observable<Account>;
 
     constructor(
@@ -21,7 +22,9 @@ export class AccountService {
         this.accountSubject = new BehaviorSubject<Account>(null);
         this.account = this.accountSubject.asObservable();
     }
-
+      getAccounts() {
+    return this.http.get(`${this.apiUrl}/accounts`);
+  }
     public get accountValue(): Account {
         return this.accountSubject.value;
     }
