@@ -89,11 +89,11 @@ The backend configuration is stored in `config.json`:
 ```json
 {
     "database": {
-      "host": "153.92.15.31",
+      "host": "153.92.15.31 ",
       "port": 3306,
-      "user": "u875409848_monreal",
-      "password": "9T2Z5$3UKkgSYzE",
-      "database": "u875409848_monreal"
+      "user": "u875409848_catubig",
+      "password": " 9T2Z5$3UKkgSYzE",
+      "database": "u875409848_catubig"
     },
     "secret": "b28a97b3-7a3a-4a35-8bfa-41d9d2191949",
     "emailFrom": "info@node-mysql-signup-verification-api.com",
@@ -105,8 +105,8 @@ The backend configuration is stored in `config.json`:
         "pass": "nRJBMPhs3U9WczVS36"
       }
     }
-    
   }
+  
   
 ```
 
