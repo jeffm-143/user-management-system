@@ -9,7 +9,7 @@ const errorHandler = require('./src/_middleware/error-handler');
 
 const allowedOrigins = process.env.ALLOWED_ORIGINS 
   ? process.env.ALLOWED_ORIGINS.split(',') 
-  : ['http://localhost:4200', 'https://monreal-user-management-frontend.onrender.com'];
+  : ['http://localhost:4200', 'https://catubig-user-management-frontend.onrender.com'];
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
