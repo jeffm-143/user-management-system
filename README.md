@@ -207,13 +207,13 @@ Workflows are a key component of this system, allowing for structured approval p
 - Verify database connection settings in config.json
 
 #### Authentication Problems
-- Verify user credentials
-- Check if the account is active
-- Ensure email verification is complete for new accounts
+- Verify user credentials.
+- Check if the account is active.
+- Ensure email verification is complete for new accounts.
 
 #### Workflow Issues
-- Verify the workflow record contains the correct requestId
-- Check that your database has proper relationships between tables
-- Ensure users have appropriate permissions for workflow actions
+- Verify the workflow record contains the correct requestId.
+- Check that your database has proper relationships between tables.
+- Ensure users have appropriate permissions for workflow actions.
 
 For additional support, please contact the system administrator.
