@@ -24,7 +24,7 @@
               "src/favicon.ico",
               "src/assets",
               "src/_redirects",
-              "staticwebapp.config.json"
+              "src/staticwebapp.config.json"
             ],
             "styles": [
               "src/styles.less"
