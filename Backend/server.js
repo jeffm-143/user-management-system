@@ -15,6 +15,13 @@ const allowedOrigins = [
   'https://monreal-user-management-frontend.onrender.com' // replace with actual Render frontend URL
 ];
 
+app.use(express.static(path.join(__dirname, '../Frontend/dist/frontend')));
+
+// For all GET requests, send back index.html (for Angular routing)
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../Frontend/dist/frontend/index.html'));
+});
+
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {
