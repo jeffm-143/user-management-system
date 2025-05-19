@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <base href="/" />
+    <base href="./" />
     <title>Angular 10 Boilerplate - Email Sign Up with Verification, Authentication & Forgot Password</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -20,5 +20,15 @@
             <a href="https://wilschoy78.github.io/" target="_top">Monreal</a>
         </p>
     </div>
+<script>
+  // Simple error catcher to help debug deployment issues
+  window.addEventListener('error', function(e) {
+    document.body.innerHTML += '<div style="color:red; padding:20px;">' + 
+      'Error loading application: ' + e.message + '</div>';
+    console.error('Application error:', e);
+  });
+  
+  console.log('Application attempting to initialize...');
+</script>
 </body>
 </html>
