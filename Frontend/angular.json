@@ -27,7 +27,7 @@
               "src/_redirects",
               "src/staticwebapp.config.json",
               "src/web.config",
-              "rewrite.json"
+              "src/rewrite.json"
             ],
             "styles": [
               "src/styles.less"
