@@ -1,6 +1,5 @@
 require('rootpath')();
 const express = require('express');
-const path = require('path');
 const app = express();
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
@@ -11,11 +10,21 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-app.use(express.static(path.join(__dirname, '../Angular-10-Boilerplate/dist/')));
+const allowedOrigins = [
+  'http://localhost:4200', // for local dev
+  'https://your-frontend.onrender.com' // replace with actual Render frontend URL
+];
 
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../Angular-10-Boilerplate/dist/index.html'));
-});
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
+}));
 
 // allow cors requests from any origin and with credentials
 app.use(cors({ origin: (origin, callback) => callback(null, true), credentials: true }));
