@@ -1,5 +1,6 @@
 require('rootpath')();
 const express = require('express');
+const path = require('path');
 const app = express();
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
@@ -9,6 +10,12 @@ const errorHandler = require('./src/_middleware/error-handler');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cookieParser());
+
+app.use(express.static(path.join(__dirname, '../Angular-10-Boilerplate/dist/')));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../Angular-10-Boilerplate/dist/index.html'));
+});
 
 // allow cors requests from any origin and with credentials
 app.use(cors({ origin: (origin, callback) => callback(null, true), credentials: true }));
