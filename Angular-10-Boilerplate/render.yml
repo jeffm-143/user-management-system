@@ -1,5 +1,5 @@
 services:
-  - name: monreal-user-management-frontend
+  - name: catubig-user-management-frontend
     type: web
     env: static
     rootDir: Angular-10-Boilerplate
