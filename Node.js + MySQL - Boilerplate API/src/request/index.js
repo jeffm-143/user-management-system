@@ -6,9 +6,9 @@ const Role = require('../_helpers/role');
 
 router.post('/', authorize(), create);
 router.get('/', authorize(Role.Admin), getAll);
-router.get('/:id', authorize(), getById);
 router.get('/user/:userId', authorize(), getByUserId);
 router.get('/employee/:employeeId', authorize(), getByEmployeeId);
+router.get('/:id', authorize(), getById);
 router.put('/:id', authorize(Role.Admin), update);
 router.delete('/:id', authorize(Role.Admin), _delete);
 
