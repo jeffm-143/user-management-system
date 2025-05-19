@@ -29,7 +29,7 @@
               "src/route.json",
               {
                 "glob": "_redirects",
-                "input": "src/assets",
+                "input": "src",
                 "output": "/"
               },
               {

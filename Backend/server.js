@@ -27,7 +27,14 @@ app.use(cors({
   credentials: true
 }));
 
-
+app.get('/', (req, res) => {
+  res.json({
+    message: 'User Management System API',
+    version: '1.0',
+    status: 'running',
+    documentation: '/api-docs'
+  });
+});
 // api routes
 app.use('/accounts', require('./src/_accounts/accounts.controller'));
 
@@ -48,6 +55,7 @@ app.use('/workflows', require('./src/workflows'));
 
 // global error handler
 app.use(errorHandler);
+
 
 // start server
 const port = process.env.PORT || (process.env.NODE_ENV === 'production' ? 80 : 4000);
