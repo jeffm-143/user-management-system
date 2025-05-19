@@ -24,10 +24,9 @@
             "assets": [
               "src/favicon.ico",
               "src/assets",
-              "src/_redirects",
-              "src/staticwebapp.config.json",
-              "src/web.config",
-              "src/rewrite.json"
+              "src/_headers",
+              "src/rewrite.json",
+              "src/route.json"
             ],
             "styles": [
               "src/styles.less"
