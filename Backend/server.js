@@ -12,7 +12,7 @@ app.use(cookieParser());
 
 const allowedOrigins = [
   'http://localhost:4200', // for local dev
-  'https://your-frontend.onrender.com' // replace with actual Render frontend URL
+  'https://monreal-user-management-frontend.onrender.com' // replace with actual Render frontend URL
 ];
 
 app.use(cors({
