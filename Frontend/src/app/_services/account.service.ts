@@ -22,9 +22,11 @@ export class AccountService {
         this.accountSubject = new BehaviorSubject<Account>(null);
         this.account = this.accountSubject.asObservable();
     }
-      getAccounts() {
-    return this.http.get(`${this.apiUrl}/accounts`);
-  }
+
+    getAccounts() {
+        return this.http.get(`${this.apiUrl}/accounts`);
+    }
+
     public get accountValue(): Account {
         return this.accountSubject.value;
     }
