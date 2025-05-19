@@ -28,8 +28,13 @@
               "src/rewrite.json",
               "src/route.json",
               {
+                "glob": "_redirects",
+                "input": "src/assets",
+                "output": "/"
+              },
+              {
                 "glob": "netlify.toml",
-                "input": ".",
+                "input": "./",
                 "output": "/"
               }
             ],

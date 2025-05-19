@@ -1,15 +1,24 @@
 services:
   - type: web
-    name: monreal-user-management-backend
+    name: user-management-backend
     env: node
+    region: ohio
     buildCommand: cd Backend && npm install
     startCommand: cd Backend && node server.js
-    
+    envVars:
+      - key: NODE_ENV
+        value: production
+  
   - type: web
-    name: monreal-user-management-frontend
+    name: user-management-frontend
     env: static
+    region: ohio
     buildCommand: cd Frontend && npm install && npm run build
-    staticPublishPath: Frontend/dist/angular-signup-verification-boilerplate
+    staticPublishPath: ./Frontend/dist/user-management-system
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: no-cache
     routes:
       - type: rewrite
         source: /*

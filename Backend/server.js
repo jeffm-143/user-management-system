@@ -11,8 +11,9 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 
 const allowedOrigins = [
-  'http://localhost:4200', // for local dev
-  'https://monreal-user-management-frontend.onrender.com' // replace with actual Render frontend URL
+  'http://localhost:4200',
+  'https://user-management-frontend.onrender.com',
+  'https://monreal-user-management-frontend.onrender.com'
 ];
 
 app.use(cors({
@@ -49,5 +50,5 @@ app.use('/workflows', require('./src/workflows'));
 app.use(errorHandler);
 
 // start server
-const port = process.env.NODE_ENV === 'production' ? (process.env.PORT || 80) : 4000;
+const port = process.env.PORT || (process.env.NODE_ENV === 'production' ? 80 : 4000);
 app.listen(port, () => console.log('Server listening on port ' + port));
