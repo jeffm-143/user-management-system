@@ -26,7 +26,12 @@
               "src/assets",
               "src/_headers",
               "src/rewrite.json",
-              "src/route.json"
+              "src/route.json",
+              {
+                "glob": "netlify.toml",
+                "input": ".",
+                "output": "/"
+              }
             ],
             "styles": [
               "src/styles.less"
