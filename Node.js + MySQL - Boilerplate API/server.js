@@ -6,14 +6,13 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const errorHandler = require('./src/_middleware/error-handler');
 
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-app.use(cookieParser());
-
-
 const allowedOrigins = process.env.ALLOWED_ORIGINS 
   ? process.env.ALLOWED_ORIGINS.split(',') 
   : ['http://localhost:4200', 'https://monreal-user-management-frontend.onrender.com'];
+
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use(cookieParser());
 
 const corsOptions = {
   origin: function(origin, callback) {
@@ -30,31 +29,7 @@ const corsOptions = {
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
   allowedHeaders: 'Content-Type,Authorization,X-Requested-With,Accept'
 };
-
-app.use(cors({
-  origin: function(origin, callback) {
-    // Allow requests with no origin (like mobile apps, curl requests)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) === -1) {
-      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-      return callback(new Error(msg), false);
-    }
-    return callback(null, true);
-  },
-  credentials: true
-}));
-
-app.get('/', (req, res) => {
-  res.json({
-    message: 'User Management System API',
-    version: '1.0',
-    status: 'running',
-    documentation: '/api-docs'
-  });
-});
-
-// allow cors requests from any origin and with credentials
-app.use(cors({ origin: (origin, callback) => callback(null, true), credentials: true }));
+app.use(cors(corsOptions));
 
 // api routes
 app.use('/accounts', require('./src/_accounts/accounts.controller'));
