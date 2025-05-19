@@ -1,22 +1,41 @@
 <div class="modal fade" id="transferModal" tabindex="-1" aria-labelledby="transferModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Transfer Employee: {{employee?.employeeId}}</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content shadow">
+      <div class="modal-header bg-warning text-dark">
+        <h5 class="modal-title">
+          <i class="fa fa-exchange-alt mr-2"></i>
+          Transfer Employee: {{employee?.employeeId || ''}}
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-info d-flex align-items-center mb-3">
+          <i class="fa fa-info-circle mr-2"></i>
+          <div>Transferring an employee will update their department assignment.</div>
         </div>
-        <div class="modal-body">
-          <div class="mb-3">
-            <label class="form-label">Department</label>
-            <select class="form-select" [(ngModel)]="employee.departmentId">
+        
+        <div class="mb-3">
+          <label class="form-label font-weight-bold">Select New Department</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="fa fa-building"></i></span>
+            </div>
+            <select class="form-select form-control" [(ngModel)]="employee.departmentId">
+              <option value="">-- Select Department --</option>
               <option *ngFor="let dept of departments" [value]="dept.id">{{dept.name}}</option>
             </select>
           </div>
+          <small class="form-text text-muted">Choose the department you want to transfer this employee to.</small>
         </div>
-        <div class="modal-footer">
-          <button class="btn btn-primary" (click)="transfer()">Transfer</button>
-          <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">
+          <i class="fa fa-times mr-1"></i> Cancel
+        </button>
+        <button class="btn btn-primary" (click)="transfer()">
+          <i class="fa fa-check mr-1"></i> Complete
+        </button>
       </div>
     </div>
   </div>
+</div>

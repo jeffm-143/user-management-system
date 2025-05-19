@@ -1,71 +1,114 @@
-<div class="card">
-    <div class="card-header">
-        Employees
+<div class="container">
+  <div class="card shadow-sm mb-4">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+      <h2 class="mb-0">Employees</h2>
+      <button *ngIf="account()?.role === 'Admin'" class="btn btn-success" (click)="add()">
+        <i class="fa fa-plus-circle mr-1"></i> Add Employee
+      </button>
     </div>
     <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Employee ID</th>
-                        <th>User</th>
-                        <th>Position</th>
-                        <th>Department</th>
-                        <th>Hire Date</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let employee of employees">
-                        <td>{{employee.employeeId}}</td>
-                        <td>{{employee.user?.email}}</td>
-                        <td>{{employee.position}}</td>
-                        <td>{{employee.department?.name}}</td>
-                        <td>{{employee.hireDate | date:'shortDate'}}</td>
-                        <td>
-                            <span class="badge" [ngClass]="{
-                                'badge-success': employee.status === 'Active',
-                                'badge-danger': employee.status === 'Inactive'
-                            }">{{employee.status}}</span>
-                        </td>
-                        <td>
-                            <button class="btn btn-sm btn-info me-1" (click)="viewRequests(employee.id)">Requests</button>
-                            <button class="btn btn-sm btn-info me-1" (click)="viewWorkflows(employee.id)">Workflows</button>
-                            <button *ngIf="account()?.role === 'Admin'" class="btn btn-sm btn-warning me-1" (click)="transfer(employee)">Transfer</button>
-                            <button class="btn btn-sm btn-primary me-1" (click)="edit(employee.id)">Edit</button>
-                            <button *ngIf="account()?.role === 'Admin'" class="btn btn-sm btn-danger" (click)="delete(employee.id)">Delete</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <button *ngIf="account()?.role === 'Admin'" class="btn btn-primary float-end" (click)="add()">Add Employee</button>
+      <p class="text-muted">Manage employee information, transfers, and workflows</p>
+      
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead class="thead-light">
+            <tr>
+              <th>Employee ID</th>
+              <th>User</th>
+              <th>Position</th>
+              <th>Department</th>
+              <th>Hire Date</th>
+              <th>Status</th>
+              <th class="text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let employee of employees">
+              <td><strong>{{employee.employeeId}}</strong></td>
+              <td>{{employee.user?.email}}</td>
+              <td>{{employee.position}}</td>
+              <td>
+                <span class="badge badge-info">{{employee.department?.name}}</span>
+              </td>
+              <td>{{employee.hireDate | date:'shortDate'}}</td>
+              <td>
+                <span class="badge" [ngClass]="{
+                    'badge-success': employee.status === 'Active',
+                    'badge-danger': employee.status === 'Inactive'
+                }">
+                  <i [class]="employee.status === 'Active' ? 'fa fa-check-circle' : 'fa fa-times-circle'"></i>
+                  {{employee.status}}
+                </span>
+              </td>
+              <td class="text-center">
+                <div class="btn-group">
+                  <button class="btn btn-sm btn-info" (click)="viewRequests(employee.id)">
+                    <i class="fa fa-list-alt mr-1"></i> Requests
+                  </button>
+                  <button class="btn btn-sm btn-info ml-1" (click)="viewWorkflows(employee.id)">
+                    <i class="fa fa-project-diagram mr-1"></i> Workflows
+                  </button>
+                  <button *ngIf="account()?.role === 'Admin'" class="btn btn-sm btn-warning ml-1" (click)="transfer(employee)">
+                    <i class="fa fa-exchange-alt mr-1"></i> Transfer
+                  </button>
+                  <button class="btn btn-sm btn-primary ml-1" (click)="edit(employee.id)">
+                    <i class="fa fa-edit mr-1"></i> Edit
+                  </button>
+                  <button *ngIf="account()?.role === 'Admin'" class="btn btn-sm btn-danger ml-1" (click)="delete(employee.id)">
+                    <i class="fa fa-trash mr-1"></i> Delete
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr *ngIf="!employees || employees.length === 0">
+              <td colspan="7" class="text-center py-4">
+                <p class="text-muted mb-0">No employees found</p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
+  </div>
 </div>
 
-<!-- Modal with ngIf for visibility control -->
+<!-- Modal with improved styling -->
 <div *ngIf="showTransferModal" class="modal-backdrop fade show"></div>
 <div *ngIf="showTransferModal" class="modal show d-block" tabindex="-1" aria-labelledby="transferModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="transferModalLabel">Transfer Employee: {{selectedEmployee?.employeeId || ''}}</h5>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content shadow">
+      <div class="modal-header bg-warning text-dark">
+        <h5 class="modal-title" id="transferModalLabel">
+          <i class="fa fa-exchange-alt mr-2"></i>
+          Transfer Employee: {{selectedEmployee?.employeeId || ''}}
+        </h5>
         <button type="button" class="btn-close" (click)="hideModal()"></button>
       </div>
       <div class="modal-body">
-        <div class="alert alert-danger" *ngIf="errorMessage">{{errorMessage}}</div>
+        <div class="alert alert-danger d-flex align-items-center" *ngIf="errorMessage">
+          <i class="fa fa-exclamation-circle mr-2"></i>
+          <div>{{errorMessage}}</div>
+        </div>
         <div class="mb-3">
-          <label class="form-label">Department</label>
-          <select class="form-select" [(ngModel)]="selectedDepartmentId">
-            <option value="">-- Select Department --</option>
-            <option *ngFor="let dept of departments" [value]="dept.id">{{dept.name}}</option>
-          </select>
+          <label class="form-label font-weight-bold">Select New Department</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="fa fa-building"></i></span>
+            </div>
+            <select class="form-select form-control" [(ngModel)]="selectedDepartmentId">
+              <option value="">-- Select Department --</option>
+              <option *ngFor="let dept of departments" [value]="dept.id">{{dept.name}}</option>
+            </select>
+          </div>
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="hideModal()">Cancel</button>
-        <button type="button" class="btn btn-primary" (click)="confirmTransfer()">Transfer</button>
+        <button type="button" class="btn btn-secondary" (click)="hideModal()">
+          <i class="fa fa-times mr-1"></i> Cancel
+        </button>
+        <button type="button" class="btn btn-primary" (click)="confirmTransfer()">
+          <i class="fa fa-check mr-1"></i> Confirm
+        </button>
       </div>
     </div>
   </div>

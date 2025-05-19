@@ -1,48 +1,96 @@
-<div class="card">
-    <div class="card-header">
-        <h5 class="mb-0">
-            Workflows
-            <span *ngIf="employeeId" class="text-muted ms-2">for Employee {{employeeId}}</span>
-        </h5>
+<div class="container">
+  <div class="card shadow-sm mb-4">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+      <h2 class="mb-0">
+        Workflows
+        <small *ngIf="employeeId" class="text-light ml-2">for Employee {{employeeId}}</small>
+      </h2>
+      <a *ngIf="employeeId" href="javascript:history.back()" class="btn btn-outline-light">
+        <i class="fa fa-arrow-left mr-1"></i> Back
+      </a>
     </div>
     <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th style="width: 20%">Type</th>
-                        <th style="width: 50%">Details</th>
-                        <th style="width: 15%">Status</th>
-                        <th *ngIf="account()?.role === 'Admin'" style="width: 15%">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let workflow of workflows">
-                        <td>{{workflow.type}}</td>
-                        <td>
-                            <ng-container *ngIf="workflow.details">
-                                <div *ngFor="let key of getObjectKeys(workflow.details)">
-                                    <strong>{{key}}:</strong> {{workflow.details[key]}}
-                                </div>
-                            </ng-container>
-                            <span *ngIf="!workflow.details">No details</span>
-                        </td>
-                        <td>{{workflow.status || 'Pending'}}</td>
-                        <td *ngIf="account()?.role === 'Admin'">
-                            <select class="form-select form-select-sm" [(ngModel)]="workflow._status" 
-                                    (change)="updateWorkflowStatus(workflow.id, workflow._status)">
-                                <option value="Pending">Pending</option>
-                                <option value="Approved">Approved</option>
-                                <option value="Rejected">Rejected</option>
-                                <option value="Completed">Completed</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr *ngIf="!workflows || workflows.length === 0">
-                        <td colspan="4" class="text-center">No workflows found</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+      <p class="text-muted">Manage workflow processes and their current status</p>
+
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead class="thead-light">
+            <tr>
+              <th>Type</th>
+              <th>Details</th>
+              <th>Status</th>
+              <th *ngIf="account()?.role === 'Admin'" class="text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let workflow of workflows">
+              <td>
+                <span class="badge" [ngClass]="{
+                  'badge-info': workflow.type === 'Onboarding',
+                  'badge-warning': workflow.type === 'Leave',
+                  'badge-secondary': workflow.type === 'Request',
+                  'badge-primary': workflow.type === 'Approval'
+                }">
+                  <i class="fa" [ngClass]="{
+                    'fa-user-plus': workflow.type === 'Onboarding',
+                    'fa-calendar-alt': workflow.type === 'Leave',
+                    'fa-clipboard-list': workflow.type === 'Request',
+                    'fa-check-double': workflow.type === 'Approval'
+                  }"></i>
+                  {{workflow.type}}
+                </span>
+              </td>
+              <td>
+                <ng-container *ngIf="workflow.details">
+                  <div *ngFor="let key of getObjectKeys(workflow.details)" class="small">
+                    <strong>{{key}}:</strong> {{workflow.details[key]}}
+                  </div>
+                </ng-container>
+                <span *ngIf="!workflow.details" class="text-muted">No details available</span>
+              </td>
+              <td>
+                <span class="badge" [ngClass]="{
+                  'badge-warning': workflow.status === 'Pending' || !workflow.status,
+                  'badge-success': workflow.status === 'Approved' || workflow.status === 'Completed',
+                  'badge-danger': workflow.status === 'Rejected'
+                }">
+                  <i class="fa" [ngClass]="{
+                    'fa-clock': workflow.status === 'Pending' || !workflow.status,
+                    'fa-check-circle': workflow.status === 'Approved',
+                    'fa-times-circle': workflow.status === 'Rejected',
+                    'fa-flag-checkered': workflow.status === 'Completed'
+                  }"></i>
+                  {{workflow.status || 'Pending'}}
+                </span>
+              </td>
+              <td *ngIf="account()?.role === 'Admin'" class="text-center">
+                <div class="input-group input-group-sm">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fa fa-tasks"></i></span>
+                  </div>
+                  <select class="form-select form-control" [(ngModel)]="workflow._status" 
+                          (change)="updateWorkflowStatus(workflow.id, workflow._status)">
+                    <option value="Pending">Pending</option>
+                    <option value="Approved">Approved</option>
+                    <option value="Rejected">Rejected</option>
+                    <option value="Completed">Completed</option>
+                  </select>
+                  <div class="input-group-append">
+                    <button class="btn btn-primary" (click)="updateWorkflowStatus(workflow.id, workflow._status)">
+                      <i class="fa fa-save"></i>
+                    </button>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr *ngIf="!workflows || workflows.length === 0">
+              <td colspan="4" class="text-center py-4">
+                <p class="text-muted mb-0">No workflows found</p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
+  </div>
 </div>
