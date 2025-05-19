@@ -15,9 +15,6 @@ const allowedOrigins = [
   'https://monreal-user-management-frontend.onrender.com' // replace with actual Render frontend URL
 ];
 
-
-
-
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {
@@ -29,8 +26,6 @@ app.use(cors({
   credentials: true
 }));
 
-// allow cors requests from any origin and with credentials
-app.use(cors({ origin: (origin, callback) => callback(null, true), credentials: true }));
 
 // api routes
 app.use('/accounts', require('./src/_accounts/accounts.controller'));
