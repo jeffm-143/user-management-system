@@ -4,7 +4,7 @@ services:
     env: static
     rootDir: Angular-10-Boilerplate
     buildCommand: npm install --legacy-peer-deps && npm run build -- --configuration production
-    staticPublishPath: dist/angular-signup-verification-boilerplate/browser
+    staticPublishPath: dist/angular-signup-verification-boilerplate
     headers:
       - path: /*
         name: Cache-Control
