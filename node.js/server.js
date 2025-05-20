@@ -4,6 +4,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
+const path = require('path'); // Add this line to import the path module
 const errorHandler = require('./src/_middleware/error-handler');
 
 const allowedOrigins = process.env.ALLOWED_ORIGINS 
