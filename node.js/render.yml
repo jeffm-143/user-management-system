@@ -1,9 +1,9 @@
 services:
-  - name: monreal-user-management
+  - name: monreal-user-management-backend
     type: web
     env: node
     plan: free
-    rootDir: Node-js-MySQL-BoilerPlate
+    rootDir: node.js
     buildCommand: npm install
     startCommand: npm start
     envVars:
