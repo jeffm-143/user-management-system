@@ -1,5 +1,5 @@
 services:
-  - name: monreal-user-management-backend
+  - name: sagaral-user-management-backend
     type: web
     env: node
     plan: free

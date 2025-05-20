@@ -1,49 +1,89 @@
-<div class="card">
-    <div class="card-header">Requests</div>
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Type</th>
-                        <th>Employee</th>
-                        <th>Items</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                        <tr *ngFor="let request of requests">
-                            <td>{{request.type}}</td>
-                            <td>{{request.Employee?.employeeId || 'Not assigned'}}</td>
-                            <td>
-                                <ng-container *ngIf="request.RequestItems && request.RequestItems.length; else noItems">
-                                    <div *ngFor="let item of request.RequestItems">
-                                        {{item.name}} (x{{item.quantity}})
-                                    </div>
-                                </ng-container>
-                                <ng-template #noItems>
-                                    <span>No items</span>
-                                </ng-template>
-                            </td>
-
-                            <td>{{request.status || 'Pending'}}</td>
-                            <td>
-                                <button *ngIf="account()?.role === 'Admin'"
-                                    class="btn btn-sm btn-primary me-1"
-                                    (click)="edit(request.id)">Edit</button>
-                                <button *ngIf="account()?.role === 'Admin'"
-                                    class="btn btn-sm btn-danger"
-                                    (click)="delete(request.id)">Delete</button>
-                            </td>
-                        </tr>
-                <tr *ngIf="!requests.length">
-                    <td colspan="5" class="text-center">No requests found</td>
-                </tr>
-            </tbody>
-            </table>
-        </div>
-        <button class="btn btn-primary float-end" (click)="add()">Add Request</button>
+<div class="container">
+  <div class="card shadow-sm mb-4">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+      <h2 class="mb-0">Requests</h2>
+      <button class="btn btn-success" (click)="add()">
+        <i class="fa fa-plus-circle mr-1"></i> Add Request
+      </button>
     </div>
+    <div class="card-body">
+      <p class="text-muted">Manage employee requests and their status</p>
+      
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead class="thead-light">
+            <tr>
+              <th>Type</th>
+              <th>Employee</th>
+              <th>Items</th>
+              <th>Status</th>
+              <th class="text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let request of requests">
+              <td>
+                <span class="badge" [ngClass]="{
+                  'badge-info': request.type === 'Equipment',
+                  'badge-warning': request.type === 'Leave',
+                  'badge-secondary': request.type === 'Resources'
+                }">
+                  <i class="fa" [ngClass]="{
+                    'fa-tools': request.type === 'Equipment',
+                    'fa-calendar-alt': request.type === 'Leave',
+                    'fa-box-open': request.type === 'Resources'
+                  }"></i>
+                  {{request.type}}
+                </span>
+              </td>
+              <td>{{request.Employee?.employeeId || 'Not assigned'}}</td>
+              <td>
+                <ng-container *ngIf="request.RequestItems && request.RequestItems.length; else noItems">
+                  <div *ngFor="let item of request.RequestItems" class="small">
+                    <i class="fa fa-circle mr-1 small"></i> {{item.name}} (x{{item.quantity}})
+                  </div>
+                </ng-container>
+                <ng-template #noItems>
+                  <span class="text-muted">No items</span>
+                </ng-template>
+              </td>
+              <td>
+                <span class="badge" [ngClass]="{
+                  'badge-success': request.status === 'Approved',
+                  'badge-danger': request.status === 'Rejected',
+                  'badge-warning': request.status === 'Pending' || !request.status
+                }">
+                  <i class="fa" [ngClass]="{
+                    'fa-check-circle': request.status === 'Approved',
+                    'fa-times-circle': request.status === 'Rejected',
+                    'fa-clock': request.status === 'Pending' || !request.status
+                  }"></i>
+                  {{request.status || 'Pending'}}
+                </span>
+              </td>
+              <td class="text-center">
+                <div class="btn-group">
+                  <button *ngIf="account()?.role === 'Admin'" 
+                    class="btn btn-sm btn-primary"
+                    (click)="edit(request.id)">
+                    <i class="fa fa-edit mr-1"></i> Edit
+                  </button>
+                  <button *ngIf="account()?.role === 'Admin'"
+                    class="btn btn-sm btn-danger ml-1"
+                    (click)="delete(request.id)">
+                    <i class="fa fa-trash mr-1"></i> Delete
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr *ngIf="!requests.length">
+              <td colspan="5" class="text-center py-4">
+                <p class="text-muted mb-0">No requests found</p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>
-

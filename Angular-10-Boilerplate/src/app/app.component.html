@@ -1,17 +1,56 @@
 <div class="app-container" [ngClass]="{ 'bg-light': account }">
-    <!-- main nav -->
-    <nav class="navbar navbar-expand navbar-dark bg-dark" *ngIf="account">
-        <div class="navbar-nav">
-            <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-item nav-link">Home</a>
-            <a routerLink="/profile" routerLinkActive="active" class="nav-item nav-link">Profile</a>
-            <a *ngIf="account.role === Role.Admin" routerLink="/admin" routerLinkActive="active" class="nav-item nav-link">Admin</a>
-            <a (click)="logout()" class="nav-item nav-link">Logout</a>
+    <!-- Main Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm" *ngIf="account">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" routerLink="/">
+                <i class="fa fa-shield-alt text-warning mr-2"></i>
+                <strong>User Management System</strong>
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarMain" 
+                    aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarMain">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">
+                            <i class="fa fa-home mr-1"></i> Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a routerLink="/profile" routerLinkActive="active" class="nav-link">
+                            <i class="fa fa-user-circle mr-1"></i> Profile
+                        </a>
+                    </li>
+                    <li class="nav-item" *ngIf="account.role === Role.Admin">
+                        <a routerLink="/admin" routerLinkActive="active" class="nav-link">
+                            <i class="fa fa-cogs mr-1"></i> Admin
+                        </a>
+                    </li>
+                </ul>
+                
+                <div class="navbar-nav">
+                    <!-- User info with visible logout button -->
+                    <div class="nav-item d-flex align-items-center">
+                        <button class="btn btn-outline-danger" (click)="logout()">
+                            <i class="fa fa-sign-out-alt mr-1"></i> Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </nav>
     
-    <!-- global alert -->
-    <alert></alert>
+    <!-- Global Alert -->
+    <div class="container mt-3">
+        <alert></alert>
+    </div>
 
-    <!-- main router outlet -->
-    <router-outlet></router-outlet>
+    <!-- Main Content -->
+    <div class="py-3">
+        <router-outlet></router-outlet>
+    </div>
+    
 </div>
